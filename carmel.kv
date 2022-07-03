@@ -15,6 +15,174 @@ MDScreen:
                 name: 'screen 1'
                 text: "Home"
                 icon: 'home'
+                on_tab_release:
+                    dots.title = "Home"
+                    root.ids.scroll_main.scroll_y = 1
+                    root.ids.scroll2.scroll_x = 0
+
+                ScrollView:
+                    effect_cls: 'ScrollEffect'
+                    id:scroll_main
+                    pos_hint: {'top': .99-dots.height/root.height}
+                    size_hint_y: 1-dots.height/root.height
+
+                    MDBoxLayout:
+                        size_hint: (1,1.45)
+                        pos_hint: {'y':.8}
+                        orientation: "vertical"
+                        spacing: 15
+                        MDRelativeLayout:
+                            Carousel:
+                                id: carousel
+                                loop: "True"
+
+                                MDBoxLayout:
+                                    Image:
+                                        allow_stretch: True
+                                        source: 'carm.jpg'
+                                        keep_ratio: False
+
+                                MDBoxLayout:
+                                    Image:
+                                        allow_stretch: True
+                                        source: 'cat.jpg'
+                                        keep_ratio: False
+
+                                MDBoxLayout:
+                                    Image:
+                                        allow_stretch: True
+                                        source: 'church.jpg'
+                                        keep_ratio: False
+                            MDIconButton:
+                                icon:'greater-than'
+                                on_release: carousel.load_next()
+                                pos_hint:{'right':1,'center_y':.5}
+                            MDIconButton:
+                                icon:'less-than'
+                                on_release: carousel.load_previous()
+                                pos_hint:{'left':.5,'center_y':.5}
+                        MDLabel:
+                            text: " Word of God"
+                            halign: "left"
+                            valign: "top"
+                            adaptive_height: "True"
+
+                        MDBoxLayout:
+                            orientation: "vertical"
+                            size_hint_y : None
+                            height:dp(200)
+                            spacing: 12
+                            padding:[dp(5),dp(5),dp(5),dp(5)]
+
+                            MDCard:
+                                radius:[0]
+                                size: self.size
+                                adaptive_width:True
+                                height: matter.height
+                                spacing:dp(10)
+                                elevation:27
+
+                                MDLabel:
+                                    id: matter
+                                    text:  'For where two or three gather in my name, there am I with them \n(Matthew 18:20)'
+                                    halign: "center"
+                                    valign: "center"
+                                    text_size: self.size
+                                    height: self.texture_size[1]
+                                    width: self.texture_size[1]
+
+                            MDFillRoundFlatButton:
+                                text: "Next Verse"
+                                align: "center"
+                                pos_hint: {"center_x": .5, "center_y": .5}
+
+                        MDLabel:
+                            text: " Videos"
+                            halign: "left"
+                            valign: "top"
+                            adaptive_height: "true"
+
+                        MDBoxLayout:
+                            size_hint_y:None
+                            height:dp(200)
+                            padding:[dp(5),dp(5),dp(5),dp(10)]
+
+                            ScrollIcon:
+                                id: scroll2
+                                effect_cls: 'ScrollEffect'
+                                bar_width: 0
+
+                                MDBoxLayout:
+                                    adaptive_width:True
+                                    spacing:dp(20)
+
+                                    MDCard:
+                                        orientation: "vertical"
+                                        radius:[25]
+                                        size_hint_x:None
+                                        width:dp(260)
+                                        spacing:dp(0)
+                                        elevation:15
+                                        MDBoxLayout:
+                                            Button:
+                                                id: vidbut
+                                                background_normal: 'priests.jpg'
+                                                background_down: 'priests.jpg'
+                                                allow_stretch: True
+                                                keep_ratio:False
+                                                adaptive_height: True
+                                                on_release:
+                                                    app.root.current = "vidii"
+                                        MDBoxLayout:
+                                            adaptive_height: True
+                                            MDLabel:
+                                                text: 'Parish Feast Day'
+                                                halign: 'center'
+                                                adaptive_height: True
+
+                                    MDCard:
+                                        orientation: "vertical"
+                                        radius:[25]
+                                        size_hint_x:None
+                                        width:dp(260)
+                                        spacing:dp(0)
+                                        elevation:15
+                                        MDBoxLayout:
+                                            Button:
+                                                background_normal: 'kids.jpg'
+                                                background_down: 'kids.jpg'
+                                                allow_stretch: True
+                                                keep_ratio:False
+                                                on_release:
+                                                    app.root.current = "vidii"
+                                        MDBoxLayout:
+                                            adaptive_height: True
+                                            MDLabel:
+                                                text: 'Catechism Opening'
+                                                halign: 'center'
+                                                adaptive_height: True
+
+                                    MDCard:
+                                        orientation: "vertical"
+                                        radius:[25]
+                                        size_hint_x:None
+                                        width:dp(260)
+                                        spacing:dp(0)
+                                        elevation:15
+                                        MDBoxLayout:
+                                            Button:
+                                                background_normal: 'church.jpg'
+                                                background_down: 'church.jpg'
+                                                allow_stretch: True
+                                                keep_ratio:False
+                                                on_release:
+                                                    app.root.current = "vidii"
+                                        MDBoxLayout:
+                                            adaptive_height: True
+                                            MDLabel:
+                                                text: 'Church Choir'
+                                                halign: 'center'
+                                                adaptive_height: True
 
             MDBottomNavigationItem:
                 name: 'screen 2'
@@ -38,12 +206,11 @@ MDScreen:
             title: "Home"
             md_bg_color: 0,0,0,0.5
             left_action_items: [['menu', lambda x: nav_drawer.set_state("open")]]
-            right_action_items: [["dots-vertical", lambda x: root.callback(x)]]
 
         MDNavigationDrawer:
             padding: 16, 56, 12, 16
             id: nav_drawer
-            md_bg_color: 0, 0, 0, .3
+            md_bg_color: 0, 0, 0, .6
             drag_timeout: 0
 
             ScrollView:
@@ -62,6 +229,7 @@ MDScreen:
                         _txt_right_pad: ".5dp"
                         theme_text_color: 'Custom'
                         text_color:1,1,1,1
+                        ripple_scale: 0
                         MDSeparator:
                             color: 1,1,1,1
                             pos_hint: {'x':.00001, 'y': 0.001}
@@ -71,71 +239,95 @@ MDScreen:
                             color: 1,1,1,1
                             pos_hint: {'x':.00001, 'y': 0.001}
                     OneLineListItem:
+                        id: f_item
                         divider: None
                         text: "Mass Timings"
                         _txt_left_pad: "1dp"
                         theme_text_color: 'Custom'
                         text_color:1,1,1,1
+                        ripple_scale: 0
+                        on_press: root.ids.f_item.text_color= get_color_from_hex('#FFC300')
+                        on_release:root.ids.f_item.text_color= 1,1,1,1
 
                     OneLineListItem:
+                        id: s_item
                         divider: None
                         _txt_left_pad: "1dp"
                         text: "Administration"
                         theme_text_color: 'Custom'
                         text_color:1,1,1,1
-
+                        ripple_scale: 0
+                        on_press: root.ids.s_item.text_color= get_color_from_hex('#FFC300')
+                        on_release:root.ids.s_item.text_color= 1,1,1,1
                     OneLineListItem:
+                        id: t_item
                         divider: None
                         _txt_left_pad: "1dp"
                         text: "Carmel voice"
                         theme_text_color: 'Custom'
                         text_color:1,1,1,1
-
+                        ripple_scale: 0
+                        on_press: root.ids.t_item.text_color= get_color_from_hex('#FFC300')
+                        on_release:root.ids.t_item.text_color= 1,1,1,1
                     OneLineListItem:
+                        id: e_item
                         divider: None
                         _txt_left_pad: "1dp"
                         text: "History"
                         theme_text_color: 'Custom'
                         text_color:1,1,1,1
-
+                        ripple_scale: 0
+                        on_press: root.ids.e_item.text_color= get_color_from_hex('#FFC300')
+                        on_release:root.ids.e_item.text_color= 1,1,1,1
                     OneLineListItem:
+                        id: n_item
                         divider: None
                         _txt_left_pad: "1dp"
                         text: "Announcements"
                         theme_text_color: 'Custom'
                         text_color:1,1,1,1
-
+                        ripple_scale: 0
+                        on_press: root.ids.n_item.text_color= get_color_from_hex('#FFC300')
+                        on_release:root.ids.n_item.text_color= 1,1,1,1
                     OneLineListItem:
+                        id: q_item
                         divider:None
                         _txt_left_pad: "1dp"
                         text: "Contact us"
                         theme_text_color: 'Custom'
                         text_color:1,1,1,1
-
+                        ripple_scale: 0
+                        on_press: root.ids.q_item.text_color= get_color_from_hex('#FFC300')
+                        on_release:root.ids.q_item.text_color= 1,1,1,1
                     OneLineListItem:
+                        id: p_item
                         divider:None
                         _txt_left_pad: "1dp"
                         text: "About"
                         theme_text_color: 'Custom'
                         text_color:1,1,1,1
+                        ripple_scale: 0
+                        on_press: root.ids.p_item.text_color= get_color_from_hex('#FFC300')
+                        on_release:root.ids.p_item.text_color= 1,1,1,1
                         MDSeparator:
                             color: 1,1,1,1
                             pos_hint: {'x':0, 'y': 0.001}
 
-                    AnchorLayout:
-                        orientation:'vertical'
-                        MDLabel:
-                            text: "\n\nConnect through"
-                            font_style: "Subtitle2"
-                            theme_text_color: 'Custom'
-                            text_color:1,1,1,1
-                            _txt_left_pad: "1dp"
+                    OneLineListItem:
+                        divider: None
+                        text: "Connect through"
+                        font_style: "Subtitle2"
+                        theme_text_color: 'Custom'
+                        text_color:1,1,1,1
+                        _txt_left_pad: "1dp"
+                        disabled: True
 
-                    MDGridLayout:
-                        cols:2
-                        adaptive_height:True
-                        row_force_default: True
-                        row_default_height: 90
+                    OneLineListItem:
+                        divider:None
+                        cols: 2
+                        ripple_scale: 0
+
+
                         MDIconButton:
                             icon: 'facebook'
                             theme_text_color: 'Custom'
@@ -149,14 +341,39 @@ MDScreen:
                             text_color: get_color_from_hex('#FF0000')
                             user_font_size: '38dp'
                             pos_hint: {"x":.3, "y": .01}
+                            adaptive_height: True
 
-                    MDBoxLayout:
-                        orientation:'vertical'
-                        MDLabel:
-                            text: "\n@2022 Carmel Communication"
-                            font_style: "Subtitle2"
-                            secondary_font_style: 'Body2'
-                            theme_text_color: 'Custom'
-                            text_color:1,1,1,1
-                            _txt_left_pad: "1dp"
-                            _txt_bot_pad: "26dp"
+                    OneLineListItem:
+                        divider: None
+                        text: "@2022 Carmel Communication"
+                        font_style: "Subtitle2"
+                        secondary_font_style: 'Body2'
+                        theme_text_color: 'Custom'
+                        text_color:1,1,1,1
+                        _txt_left_pad: "1dp"
+                        _txt_bot_pad: "26dp"
+                        disabled: True
+
+<Vidi>:
+    name: 'vidi'
+    MDScreen:
+        MDIconButton:
+            icon: 'less-than'
+            halign: 'center'
+            valign: 'center'
+            pos_hint: {'top': .985}
+            on_release:
+                app.root.current = 'toolbar_nav'
+                root.manager.transition.direction = "right"
+
+<Vidii>:
+    name: 'vidii'
+    MDScreen:
+        MDIconButton:
+            icon: 'less-than'
+            halign: 'center'
+            valign: 'center'
+            pos_hint: {'top': .985}
+            on_release:
+                app.root.current = 'toolbar_nav'
+                root.manager.transition.direction = "right"
