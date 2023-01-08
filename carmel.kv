@@ -1,70 +1,100 @@
-#:import get_color_from_hex kivy.utils.get_color_from_hex
+#:import ThemeManager kivymd.theming.ThemeManager
+#:import ScrollEffect kivy.effects.scroll.ScrollEffect
+#:import DragBehavior kivy.uix.behaviors.drag.DragBehavior
+#:import Factory kivy.factory.Factory
+#:import Window kivy.core.window.Window
+#:import MapView kivy_garden.mapview.MapView
 
 MDScreen:
 <ToolbarNavigate>:
     name: 'toolbar_nav'
     MDScreen:
         MDBottomNavigation:
-            id: adjus
+            id: bottom_nav
             orientation: "vertical"
-            panel_color: get_color_from_hex("#111010")
-            text_color_normal: get_color_from_hex('#b4b8b5')
-            text_color_active: get_color_from_hex('#FFC300')
-
+            panel_color: "#111010"
+            text_color_normal: '#b4b8b5'
+            text_color_active: '#FFC300'
             MDBottomNavigationItem:
                 name: 'screen 1'
+                id: nav_1
                 text: "Home"
                 icon: 'home'
                 on_tab_release:
                     dots.title = "Home"
                     root.ids.scroll_main.scroll_y = 1
                     root.ids.scroll2.scroll_x = 0
-
                 ScrollView:
                     effect_cls: 'ScrollEffect'
                     id:scroll_main
                     pos_hint: {'top': .99-dots.height/root.height}
                     size_hint_y: 1-dots.height/root.height
-
-                    MDBoxLayout:
-                        size_hint: (1,1.45)
+                    bar_width: 0
+                    scroll_distance: 1
+                    scroll_wheel_distance:120
+                    Grid:
+                        size_hint_y: None
                         pos_hint: {'y':.8}
                         orientation: "vertical"
+                        adaptive_height: True
+                        height: self.minimum_height
                         spacing: 15
                         MDRelativeLayout:
-                            Carousel:
+                            adaptive_height: True
+                            size_hint_y: None
+                            height: 1000
+                            MDCarousel:
                                 id: carousel
                                 loop: "True"
-
-                                MDBoxLayout:
+                                Grid:
                                     Image:
+                                        id: image1
                                         allow_stretch: True
-                                        source: 'carm.jpg'
                                         keep_ratio: False
 
-                                MDBoxLayout:
-                                    Image:
+                                Grid:
+                                    AsyncImage:
+                                        id: image2
                                         allow_stretch: True
-                                        source: 'cat.jpg'
                                         keep_ratio: False
 
-                                MDBoxLayout:
-                                    Image:
+                                Grid:
+                                    AsyncImage:
+                                        id: image3
                                         allow_stretch: True
-                                        source: 'church.jpg'
                                         keep_ratio: False
+
+                                Grid:
+                                    Image:
+                                        id: image4
+                                        allow_stretch: True
+                                        keep_ratio: False
+
                             MDIconButton:
                                 icon:'greater-than'
                                 on_release: carousel.load_next()
                                 pos_hint:{'right':1,'center_y':.5}
+
                             MDIconButton:
                                 icon:'less-than'
                                 on_release: carousel.load_previous()
                                 pos_hint:{'left':.5,'center_y':.5}
+                        Grid:
+                            id: box
+                            size_hint_y: None
+                            height: self.minimum_height
+                            adaptive_height: True
+                        Grid:
+                            id: box2
+                            size_hint_y: None
+                            height: self.minimum_height
+                            adaptive_height: True
+
                         MDLabel:
                             text: " Word of God"
                             halign: "left"
                             valign: "top"
+                            size_hint_y: None
                             adaptive_height: "True"
 
                         MDBoxLayout:
@@ -79,8 +109,8 @@ MDScreen:
                                 size: self.size
                                 adaptive_width:True
                                 height: matter.height
-                                spacing:dp(10)
-                                elevation:27
+                                spacing:dp(8)
+                                elevation:0
 
                                 MDLabel:
                                     id: matter
@@ -92,20 +122,22 @@ MDScreen:
                                     width: self.texture_size[1]
 
                             MDFillRoundFlatButton:
+                                id: bib_buton
                                 text: "Next Verse"
                                 align: "center"
                                 pos_hint: {"center_x": .5, "center_y": .5}
+                                on_release: root.run_check()
 
                         MDLabel:
-                            text: " Videos"
+                            text: " Association"
                             halign: "left"
                             valign: "top"
                             adaptive_height: "true"
-
+                            size_hint_y: None
                         MDBoxLayout:
-                            size_hint_y:None
-                            height:dp(200)
-                            padding:[dp(5),dp(5),dp(5),dp(10)]
+                            size_hint_y: None
+                            height:dp(150)
+                            padding:[dp(3),dp(3),dp(3),dp(8)]
 
                             ScrollIcon:
                                 id: scroll2
@@ -114,249 +146,1141 @@ MDScreen:
 
                                 MDBoxLayout:
                                     adaptive_width:True
-                                    spacing:dp(20)
+                                    spacing:dp(10)
 
-                                    MDCard:
+                                    Grid:
                                         orientation: "vertical"
-                                        radius:[25]
+                                        radius:[0]
                                         size_hint_x:None
-                                        width:dp(260)
+                                        width:dp(120)
                                         spacing:dp(0)
-                                        elevation:15
-                                        MDBoxLayout:
-                                            Button:
-                                                id: vidbut
-                                                background_normal: 'priests.jpg'
-                                                background_down: 'priests.jpg'
-                                                allow_stretch: True
-                                                keep_ratio:False
-                                                adaptive_height: True
-                                                on_release:
-                                                    app.root.current = "vidii"
-                                        MDBoxLayout:
-                                            adaptive_height: True
-                                            MDLabel:
-                                                text: 'Parish Feast Day'
-                                                halign: 'center'
-                                                adaptive_height: True
+                                        elevation:0
+                                        on_release:
+                                            root.assoc_popup()
+                                        Image:
+                                            id: alter
+                                            source: 'association_altar_angels.jpg'
+                                            allow_stretch: True
+                                            keep_ratio:False
 
-                                    MDCard:
+                                    Grid:
                                         orientation: "vertical"
-                                        radius:[25]
+                                        radius:[0]
                                         size_hint_x:None
-                                        width:dp(260)
+                                        width:dp(120)
                                         spacing:dp(0)
-                                        elevation:15
-                                        MDBoxLayout:
-                                            Button:
-                                                background_normal: 'kids.jpg'
-                                                background_down: 'kids.jpg'
-                                                allow_stretch: True
-                                                keep_ratio:False
-                                                on_release:
-                                                    app.root.current = "vidii"
-                                        MDBoxLayout:
+                                        elevation:0
+                                        on_release:
+                                            root.assoc_popup2()
+                                        Image:
+                                            id: choir
+                                            source: 'association_choir.jpg'
                                             adaptive_height: True
-                                            MDLabel:
-                                                text: 'Catechism Opening'
-                                                halign: 'center'
-                                                adaptive_height: True
+                                            allow_stretch: True
+                                            keep_ratio:False
 
-                                    MDCard:
+                                    Grid:
                                         orientation: "vertical"
-                                        radius:[25]
+                                        radius:[0]
                                         size_hint_x:None
-                                        width:dp(260)
+                                        width:dp(120)
                                         spacing:dp(0)
-                                        elevation:15
-                                        MDBoxLayout:
-                                            Button:
-                                                background_normal: 'church.jpg'
-                                                background_down: 'church.jpg'
-                                                allow_stretch: True
-                                                keep_ratio:False
-                                                on_release:
-                                                    app.root.current = "vidii"
-                                        MDBoxLayout:
+                                        elevation:0
+                                        on_release:
+                                            root.assoc_popup3()
+                                        Image:
+                                            id: communic
+                                            source: 'association_communications.jpg'
                                             adaptive_height: True
-                                            MDLabel:
-                                                text: 'Church Choir'
-                                                halign: 'center'
-                                                adaptive_height: True
+                                            allow_stretch: True
+                                            keep_ratio:False
+
+                                    Grid:
+                                        orientation: "vertical"
+                                        radius:[0]
+                                        size_hint_x:None
+                                        width:dp(120)
+                                        spacing:dp(0)
+                                        elevation:0
+                                        on_release:
+                                            root.assoc_popup4()
+                                        Image:
+                                            id: food
+                                            source: 'association_food_committee.jpg'
+                                            adaptive_height: True
+                                            allow_stretch: True
+                                            keep_ratio:False
+
+                                    Grid:
+                                        orientation: "vertical"
+                                        radius:[0]
+                                        size_hint_x:None
+                                        width:dp(120)
+                                        spacing:dp(0)
+                                        elevation:0
+                                        on_release:
+                                            root.assoc_popup5()
+                                        Image:
+                                            id: laity
+                                            source: 'association_laity.jpg'
+                                            adaptive_height: True
+                                            allow_stretch: True
+                                            keep_ratio:False
+
+                                    Grid:
+                                        orientation: "vertical"
+                                        radius:[0]
+                                        size_hint_x:None
+                                        width:dp(120)
+                                        spacing:dp(0)
+                                        elevation:0
+                                        on_release:
+                                            root.assoc_popup6()
+                                        Image:
+                                            id: mathruvedi
+                                            source: 'association_mathruvedi.jpg'
+                                            adaptive_height: True
+                                            allow_stretch: True
+                                            keep_ratio:False
+
+                                    Grid:
+                                        orientation: "vertical"
+                                        radius:[0]
+                                        size_hint_x:None
+                                        width:dp(120)
+                                        spacing:dp(0)
+                                        elevation:0
+                                        on_release:
+                                            root.assoc_popup7()
+                                        Image:
+                                            id: pithruvedi
+                                            source: 'association_pithruvedi.jpg'
+                                            adaptive_height: True
+                                            allow_stretch: True
+                                            keep_ratio:False
+
+                                    Grid:
+                                        orientation: "vertical"
+                                        radius:[0]
+                                        size_hint_x:None
+                                        width:dp(120)
+                                        spacing:dp(0)
+                                        elevation:0
+                                        on_release:
+                                            root.assoc_popup8()
+                                        Image:
+                                            id: youth
+                                            source: 'association_youth.jpg'
+                                            adaptive_height: True
+                                            allow_stretch: True
+                                            keep_ratio:False
 
             MDBottomNavigationItem:
                 name: 'screen 2'
-                text: 'News'
+                text: "News"
                 icon: 'newspaper'
+                on_tab_release:
+                    dots.title = "News"
+                    root.ids.scroll_news.scroll_y = 1
+
+                ScrollView:
+                    id: scroll_news
+                    effect_cls: 'ScrollEffect'
+                    do_scroll_x: False
+                    pos_hint: {'top': .99-dots.height/root.height}
+                    size_hint_y: 1-dots.height/root.height
+                    bar_width: 0
+
+                    Grid:
+                        size_hint_y: None
+                        pos_hint: {'y':.8}
+                        orientation: "vertical"
+                        height: self.minimum_height
+                        adaptive_height: True
+
+                        Grid:
+                            height: self.minimum_height
+                            size_hint_y: None
+                            orientation: 'vertical'
+                            adaptive_height: True
+                            elevation:0
+                            padding:[dp(40),dp(40),dp(40),dp(10)]
+
+                            on_release:
+                                root.news_popup()
+
+                            AsyncImage:
+                                id: news_image_1
+                                allow_stretch: True
+                                keep_ratio:False
+                                size_hint_y: None
+                                height: 500
+
+                            MDLabel:
+                                id: news_title_1
+                                size_hint_y: None
+                                height: self.texture_size[1]
+                                adaptive_height: True
+
+                        Grid:
+                            padding: "25dp"
+                            adaptive_height: True
+                            size_hint_y: None
+                            height: self.minimum_height
+                            cols:2
+                            elevation:0
+                            on_release:
+                                root.news_popup2()
+                            AsyncImage:
+                                id: news_image_2
+                                allow_stretch: True
+                                keep_ratio:False
+                                size_hint_y: None
+                                size_hint_x: .68
+
+                            MDLabel:
+                                id: news_title_2
+                                height: self.texture_size[1]
+                                text_size: self.size
+                                width: self.texture_size[1]
+                                adaptive_height: True
+                                size_hint_y: None
+                                font_size: 17
+                                halign: 'center'
+
+                        Grid:
+                            padding: "25dp"
+                            adaptive_height: True
+                            size_hint_y: None
+                            height: self.minimum_height
+                            cols:2
+                            elevation:0
+                            on_release:
+                                root.news_popup3()
+                            AsyncImage:
+                                id: news_image_3
+                                allow_stretch: True
+                                keep_ratio:False
+                                size_hint_y: None
+                                size_hint_x: .68
+
+                            MDLabel:
+                                id: news_title_3
+                                height: self.texture_size[1]
+                                adaptive_height: True
+                                text_size: self.size
+                                width: self.texture_size[1]
+                                halign: 'center'
+                        Grid:
+                            padding: "25dp"
+                            adaptive_height: True
+                            size_hint_y: None
+                            height: self.minimum_height
+                            cols:2
+                            elevation:0
+                            on_release:
+                                root.news_popup4()
+                            AsyncImage:
+                                id: news_image_4
+                                allow_stretch: True
+                                keep_ratio:False
+                                size_hint_y: None
+                                size_hint_x: .68
+
+                            MDLabel:
+                                id: news_title_4
+                                height: self.texture_size[1]
+                                adaptive_height: True
+                                text_size: self.size
+                                width: self.texture_size[1]
+                                halign: 'center'
+
+                        Grid:
+                            padding: "25dp"
+                            adaptive_height: True
+                            size_hint_y: None
+                            height: self.minimum_height
+                            cols:2
+                            elevation: 0
+                            on_release:
+                                root.news_popup5()
+                            AsyncImage:
+                                id: news_image_5
+                                allow_stretch: True
+                                keep_ratio:False
+                                size_hint_y: None
+                                size_hint_x: .68
+                            MDLabel:
+                                id: news_title_5
+                                height: self.texture_size[1]
+                                adaptive_height: True
+                                text_size: self.size
+                                width: self.texture_size[1]
+                                halign: 'center'
 
             MDBottomNavigationItem:
                 name: 'screen 3'
-                text: 'Assoc.'
+                text: " Publ."
                 icon: 'group'
+                on_tab_release:
+                    dots.title = "Publications"
+                    root.ids.pub_scroll.scroll_y = 1
+                    root.ids.scroll_about.scroll_y = 1
+                RecycleView:
+                    id: pub_scroll
+                    effect_cls: 'ScrollEffect'
+                    pos_hint: {'top':.98-dots.height/root.height}
+                    size_hint_y: .97-dots.height/root.height
+
+                    MDGridLayout:
+                        spacing: 10
+                        cols: 3
+                        size_hint: 1,1.6
+                        Grid:
+                            orientation: 'vertical'
+                            on_release:
+                                import webbrowser
+                                webbrowser.open(root.carmel_link1)
+                            AsyncImage:
+                                id: mag_image1
+                                allow_stretch: True
+                                keep_ratio:False
+                        Grid:
+                            orientation: 'vertical'
+                            on_release:
+                                import webbrowser
+                                webbrowser.open(root.carmel_link2)
+                            AsyncImage:
+                                id: mag_image2
+                                allow_stretch: True
+                                keep_ratio:False
+                        Grid:
+                            orientation: 'vertical'
+                            on_release:
+                                import webbrowser
+                                webbrowser.open(root.carmel_link3)
+                            AsyncImage:
+                                id: mag_image3
+                                allow_stretch: True
+                                keep_ratio:False
+                        Grid:
+                            orientation: 'vertical'
+                            on_release:
+                                import webbrowser
+                                webbrowser.open(root.carmel_link4)
+                            AsyncImage:
+                                id: mag_image4
+                                allow_stretch: True
+                                keep_ratio:False
+                        Grid:
+                            orientation: 'vertical'
+                            on_release:
+                                import webbrowser
+                                webbrowser.open(root.carmel_link5)
+                            AsyncImage:
+                                id: mag_image5
+                                allow_stretch: True
+                                keep_ratio:False
+                        Grid:
+                            orientation: 'vertical'
+                            on_release:
+                                import webbrowser
+                                webbrowser.open(root.carmel_link6)
+                            AsyncImage:
+                                id: mag_image6
+                                allow_stretch: True
+                                keep_ratio:False
+                        Grid:
+                            orientation: 'vertical'
+                            on_release:
+                                import webbrowser
+                                webbrowser.open(root.carmel_link7)
+                            AsyncImage:
+                                id: mag_image7
+                                allow_stretch: True
+                                keep_ratio:False
+                        Grid:
+                            orientation: 'vertical'
+                            on_release:
+                                import webbrowser
+                                webbrowser.open(root.carmel_link8)
+                            AsyncImage:
+                                id: mag_image8
+                                allow_stretch: True
+                                keep_ratio:False
+                        Grid:
+                            orientation: 'vertical'
+                            on_release:
+                                import webbrowser
+                                webbrowser.open(root.carmel_link9)
+                            AsyncImage:
+                                id: mag_image9
+                                allow_stretch: True
+                                keep_ratio:False
+                        Grid:
+                            orientation: 'vertical'
+                            on_release:
+                                import webbrowser
+                                webbrowser.open(root.carmel_link10)
+                            AsyncImage:
+                                id: mag_image10
+                                allow_stretch: True
+                                keep_ratio:False
+                        Grid:
+                            orientation: 'vertical'
+                            on_release:
+                                import webbrowser
+                                webbrowser.open(root.carmel_link11)
+                            AsyncImage:
+                                id: mag_image11
+                                allow_stretch: True
+                                keep_ratio:False
+                        Grid:
+                            orientation: 'vertical'
+                            on_release:
+                                import webbrowser
+                                webbrowser.open(root.carmel_link12)
+                            AsyncImage:
+                                id: mag_image12
+                                allow_stretch: True
+                                keep_ratio:False
+                        Grid:
+                            orientation: 'vertical'
+                            on_release:
+                                import webbrowser
+                                webbrowser.open(root.carmel_link13)
+                            AsyncImage:
+                                id: mag_image13
+                                allow_stretch: True
+                                keep_ratio:False
+                        Grid:
+                            orientation: 'vertical'
+                            on_release:
+                                import webbrowser
+                                webbrowser.open(root.carmel_link14)
+                            AsyncImage:
+                                id: mag_image14
+                                allow_stretch: True
+                                keep_ratio:False
 
             MDBottomNavigationItem:
                 name: 'screen 4'
-                text: 'Catech.'
+                text: "Catech"
                 icon: 'book-education'
+                on_tab_release:
+                    dots.title = "Catechism"
+                    root.ids.scroll_about.scroll_y = 1
+                    root.ids.scroll_staff.scroll_y = 1
 
-        MDToolbar:
-            id: dots
-            elevation: 10
-            pos_hint: {"top": 1}
-            title: "Home"
-            md_bg_color: 0,0,0,0.5
-            left_action_items: [['menu', lambda x: nav_drawer.set_state("open")]]
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    pos_hint: {'top':.98-dots.height/root.height}
 
-        MDNavigationDrawer:
-            padding: 16, 56, 12, 16
-            id: nav_drawer
-            md_bg_color: 0, 0, 0, .6
-            drag_timeout: 0
+                    TabbedPanel:
+                        do_default_tab: False
+                        tab_width: self.size[0] / 2
 
-            ScrollView:
-                id: scroll_sub
-                effect_cls: 'ScrollEffect'
-                do_scroll_x: False
+                        TabbedPanelItem:
+                            text: "About"
 
-                MDList:
+                            ScrollView:
+                                effect_cls: 'ScrollEffect'
+                                id: scroll_about
+                                pos_hint: {'top': 1-dots.height/root.height}
+                                size_hint_y: .97-dots.height/root.height
+                                bar_width: 0
+                                MDGridLayout:
+                                    height: self.minimum_height
+                                    size_hint_y: None
+                                    adaptive_height: True
+                                    cols: 1
+                                    MDLabel:
+                                        id: cat_details
+                                        height: self.texture_size[1]
+                                        adaptive_height: True
+                                        size_hint_Y: None
+                                        text_size: Window.width, None
+                                    MDLabel:
+                                        size_hint_y: None
+
+                        TabbedPanelItem:
+                            text: "Staff"
+
+                            ScrollView:
+                                id: scroll_staff
+                                effect_cls: 'ScrollEffect'
+                                pos_hint: {'top':.98-dots.height/root.height}
+                                size_hint_y: .97-dots.height/root.height
+                                MDGridLayout:
+                                    height: self.minimum_height
+                                    size_hint_y: None
+                                    adaptive_height: True
+                                    cols: 1
+                                    MDLabel:
+                                        id: staff_details
+                                        height: self.texture_size[1]
+                                        adaptive_height: True
+                                        size_hint_Y: None
+                                        text_size: Window.width, None
+                                    MDLabel:
+                                        size_hint_y: None
+
+    MDTopAppBar:
+        id: dots
+        elevation: 0
+        pos_hint: {"top": 1}
+        title: "Home"
+        md_bg_color: "#000000"
+        adaptive_height: True
+        left_action_items: [['menu', lambda x: nav_drawer.set_state("open")]]
+
+    MDNavigationDrawer:
+        id: nav_drawer
+        md_bg_color: "#000000"
+        drag_timeout: 0
+        radius: (0, 16, 16, 0)
+
+        ScrollView:
+            id: scroll_sub
+            effect_cls: 'ScrollEffect'
+            do_scroll_x: False
+            bar_width: 0
+
+            MDList:
+                MDSeparator:
+                    pos_hint: {'x':.00001, 'y': 0.001}
+                OneLineAvatarIconListItem:
+                    padding: "50dp"
+                    text: "Carmel Parish Pune"
+                    font_style: "Subtitle2"
+                    _txt_right_pad: ".5dp"
+                    theme_text_color: 'Custom'
+                    text_color:'#FFFFFF'
+                    ripple_scale: 0
                     MDSeparator:
-                        color: 1,1,1,1
                         pos_hint: {'x':.00001, 'y': 0.001}
-                    OneLineAvatarIconListItem:
-                        padding: "50dp"
-                        text: "Carmel Parish Pune"
-                        font_style: "Subtitle2"
-                        _txt_right_pad: ".5dp"
-                        theme_text_color: 'Custom'
-                        text_color:1,1,1,1
-                        ripple_scale: 0
-                        MDSeparator:
-                            color: 1,1,1,1
-                            pos_hint: {'x':.00001, 'y': 0.001}
-                        ImageLeftWidget:
-                            source: "Splash.png"
-                        MDSeparator:
-                            color: 1,1,1,1
-                            pos_hint: {'x':.00001, 'y': 0.001}
-                    OneLineListItem:
-                        id: f_item
-                        divider: None
-                        text: "Mass Timings"
-                        _txt_left_pad: "1dp"
-                        theme_text_color: 'Custom'
-                        text_color:1,1,1,1
-                        ripple_scale: 0
-                        on_press: root.ids.f_item.text_color= get_color_from_hex('#FFC300')
-                        on_release:root.ids.f_item.text_color= 1,1,1,1
+                    ImageLeftWidget:
+                        source: "logo.png"
+                    MDSeparator:
+                        pos_hint: {'x':.00001, 'y': 0.001}
 
-                    OneLineListItem:
-                        id: s_item
-                        divider: None
-                        _txt_left_pad: "1dp"
-                        text: "Administration"
-                        theme_text_color: 'Custom'
-                        text_color:1,1,1,1
-                        ripple_scale: 0
-                        on_press: root.ids.s_item.text_color= get_color_from_hex('#FFC300')
-                        on_release:root.ids.s_item.text_color= 1,1,1,1
-                    OneLineListItem:
-                        id: t_item
-                        divider: None
-                        _txt_left_pad: "1dp"
-                        text: "Carmel voice"
-                        theme_text_color: 'Custom'
-                        text_color:1,1,1,1
-                        ripple_scale: 0
-                        on_press: root.ids.t_item.text_color= get_color_from_hex('#FFC300')
-                        on_release:root.ids.t_item.text_color= 1,1,1,1
-                    OneLineListItem:
-                        id: e_item
-                        divider: None
-                        _txt_left_pad: "1dp"
-                        text: "History"
-                        theme_text_color: 'Custom'
-                        text_color:1,1,1,1
-                        ripple_scale: 0
-                        on_press: root.ids.e_item.text_color= get_color_from_hex('#FFC300')
-                        on_release:root.ids.e_item.text_color= 1,1,1,1
-                    OneLineListItem:
-                        id: n_item
-                        divider: None
-                        _txt_left_pad: "1dp"
-                        text: "Announcements"
-                        theme_text_color: 'Custom'
-                        text_color:1,1,1,1
-                        ripple_scale: 0
-                        on_press: root.ids.n_item.text_color= get_color_from_hex('#FFC300')
-                        on_release:root.ids.n_item.text_color= 1,1,1,1
-                    OneLineListItem:
-                        id: q_item
-                        divider:None
-                        _txt_left_pad: "1dp"
-                        text: "Contact us"
-                        theme_text_color: 'Custom'
-                        text_color:1,1,1,1
-                        ripple_scale: 0
-                        on_press: root.ids.q_item.text_color= get_color_from_hex('#FFC300')
-                        on_release:root.ids.q_item.text_color= 1,1,1,1
-                    OneLineListItem:
-                        id: p_item
-                        divider:None
-                        _txt_left_pad: "1dp"
-                        text: "About"
-                        theme_text_color: 'Custom'
-                        text_color:1,1,1,1
-                        ripple_scale: 0
-                        on_press: root.ids.p_item.text_color= get_color_from_hex('#FFC300')
-                        on_release:root.ids.p_item.text_color= 1,1,1,1
-                        MDSeparator:
-                            color: 1,1,1,1
-                            pos_hint: {'x':0, 'y': 0.001}
+                OneLineListItem:
+                    id: f_item
+                    divider: None
+                    text: "Mass Timings"
+                    _txt_left_pad: "1dp"
+                    theme_text_color: 'Custom'
+                    text_color:'#FFFFFF'
+                    ripple_scale: 0
+                    on_press: root.ids.f_item.text_color= '#FFC300'
+                    on_release:
+                        root.ids.f_item.text_color= '#FFFFFF'
+                        root.mass_popup()
 
-                    OneLineListItem:
-                        divider: None
-                        text: "Connect through"
-                        font_style: "Subtitle2"
-                        theme_text_color: 'Custom'
-                        text_color:1,1,1,1
-                        _txt_left_pad: "1dp"
-                        disabled: True
-
-                    OneLineListItem:
-                        divider:None
-                        cols: 2
-                        ripple_scale: 0
+                OneLineListItem:
+                    id: f_item1
+                    divider: None
+                    text: "Administration"
+                    _txt_left_pad: "1dp"
+                    theme_text_color: 'Custom'
+                    text_color:'#FFFFFF'
+                    ripple_scale: 0
+                    on_press: root.ids.f_item1.text_color= '#FFC300'
+                    on_release:
+                        root.ids.f_item1.text_color= '#FFFFFF'
+                        app.root.current = 'admini'
+                        root.manager.transition.direction = "left"
 
 
-                        MDIconButton:
-                            icon: 'facebook'
-                            theme_text_color: 'Custom'
-                            text_color: get_color_from_hex('#4267B2')
-                            user_font_size: '38dp'
-                            pos_hint: {"y": .01}
+                OneLineListItem:
+                    id: f_item3
+                    divider: None
+                    text: "History"
+                    _txt_left_pad: "1dp"
+                    theme_text_color: 'Custom'
+                    text_color:'#FFFFFF'
+                    ripple_scale: 0
+                    on_press: root.ids.f_item3.text_color= '#FFC300'
+                    on_release:
+                        root.ids.f_item3.text_color= '#FFFFFF'
+                        app.root.current = 'history'
+                        root.manager.transition.direction = "left"
+                OneLineListItem:
+                    id: f_item4
+                    divider: None
+                    text: "Gallery"
+                    _txt_left_pad: "1dp"
+                    theme_text_color: 'Custom'
+                    text_color:'#FFFFFF'
+                    ripple_scale: 0
+                    on_press: root.ids.f_item4.text_color= '#FFC300'
+                    on_release:
+                        root.ids.f_item4.text_color= '#FFFFFF'
+                        import webbrowser
+                        webbrowser.open(root.gallery_url)
+                OneLineListItem:
+                    id: f_item5
+                    divider: None
+                    text: "About"
+                    _txt_left_pad: "1dp"
+                    theme_text_color: 'Custom'
+                    text_color:'#FFFFFF'
+                    ripple_scale: 0
+                    on_press: root.ids.f_item5.text_color= '#FFC300'
+                    on_release:
+                        root.ids.f_item5.text_color= '#FFFFFF'
+                        app.root.current = 'about'
+                    MDSeparator:
+                        pos_hint: {'x':0, 'y': 0.001}
 
-                        MDIconButton:
-                            icon: 'youtube'
-                            theme_text_color: 'Custom'
-                            text_color: get_color_from_hex('#FF0000')
-                            user_font_size: '38dp'
-                            pos_hint: {"x":.3, "y": .01}
+                OneLineListItem:
+                    divider: None
+                    text: "Connect through"
+                    font_style: "Subtitle2"
+                    theme_text_color: 'Custom'
+                    _txt_left_pad: "1dp"
+                    disabled: True
+
+                OneLineListItem:
+                    divider:None
+                    cols: 3
+                    ripple_scale: 0
+
+                    MDIconButton:
+                        icon: 'facebook'
+                        theme_text_color: 'Custom'
+                        text_color: '#4267B2'
+                        user_font_size: '38dp'
+                        pos_hint: {"y": .01}
+                        ripple_scale: 0
+                        on_release:
+                            import webbrowser
+                            webbrowser.open(root.face_url)
+                    MDIconButton:
+                        icon: 'youtube'
+                        theme_text_color: 'Custom'
+                        text_color: '#FF0000'
+                        user_font_size: '38dp'
+                        pos_hint: {"x":.2, "y": .01}
+                        adaptive_height: True
+                        ripple_scale: 0
+                        on_release:
+                            import webbrowser
+                            webbrowser.open(root.you_link)
+
+                    MDIconButton:
+                        icon: 'web'
+                        theme_text_color: 'Custom'
+                        user_font_size: '38dp'
+                        pos_hint: {"x":.4, "y": .01}
+                        adaptive_height: True
+                        ripple_scale: 0
+                        on_release:
+                            import webbrowser
+                            webbrowser.open(root.web_link)
+
+                OneLineListItem:
+                    divider: None
+                    text: "@2022 Carmel Communication"
+                    font_style: "Subtitle2"
+                    secondary_font_style: 'Body2'
+                    theme_text_color: 'Custom'
+                    _txt_left_pad: "1dp"
+                    _txt_bot_pad: "26dp"
+                    disabled: True
+
+<Content>
+    adaptive_height: True
+    orientation: 'vertical'
+    MDLabel:
+        id: announcement
+        size_hint_y: None
+        pos_hint:{'top':1}
+        adaptive_height: True
+        height: self.texture_size[1]
+        text_size: Window.width, None
+<Content2>
+    size_hint_y: None
+    adaptive_height: True
+    MDLabel:
+        id: birday
+        size_hint_y: None
+        height: self.texture_size[1]
+        adaptive_height: True
+        valign: 'center'
+        color: '#FFC300'
+
+<assocPopups>:
+    orientation: 'vertical'
+    ScrollView:
+        effect_cls: ScrollEffect
+        MDLabel:
+            id: alter_angels
+            size_hint_y: None
+            height: self.texture_size[1]
+    Button:
+        text: 'close'
+        size_hint: (.4, .15)
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release: root.close()
+
+<assocPopups2>:
+    orientation: 'vertical'
+    ScrollView:
+        effect_cls: ScrollEffect
+        MDLabel:
+            id: choir
+            size_hint_y: None
+            height: self.texture_size[1]
+    Button:
+        text: 'close'
+        size_hint: (.4, .15)
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release: root.close2()
+
+<assocPopups3>:
+    orientation: 'vertical'
+    ScrollView:
+        effect_cls: ScrollEffect
+        MDLabel:
+            id: communication
+            size_hint_y: None
+            height: self.texture_size[1]
+    Button:
+        text: 'close'
+        size_hint: (.4, .15)
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release: root.close3()
+
+<assocPopups4>:
+    orientation: 'vertical'
+    ScrollView:
+        effect_cls: ScrollEffect
+        MDLabel:
+            id: food_committee
+            size_hint_y: None
+            height: self.texture_size[1]
+    Button:
+        text: 'close'
+        size_hint: (.4, .15)
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release: root.close4()
+
+<assocPopups5>:
+    orientation: 'vertical'
+    ScrollView:
+        effect_cls: ScrollEffect
+        MDLabel:
+            id: laity
+            size_hint_y: None
+            height: self.texture_size[1]
+    Button:
+        text: 'close'
+        size_hint: (.4, .15)
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release: root.close5()
+
+<assocPopups6>:
+    orientation: 'vertical'
+    ScrollView:
+        effect_cls: ScrollEffect
+        MDLabel:
+            id: mathruvedi
+            size_hint_y: None
+            height: self.texture_size[1]
+    Button:
+        text: 'close'
+        size_hint: (.4, .15)
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release: root.close6()
+
+<assocPopups7>:
+    orientation: 'vertical'
+    ScrollView:
+        effect_cls: ScrollEffect
+        MDLabel:
+            id: pithruvedi
+            size_hint_y: None
+            height: self.texture_size[1]
+    Button:
+        text: 'close'
+        size_hint: (.4, .15)
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release: root.close7()
+
+<assocPopups8>:
+    orientation: 'vertical'
+    ScrollView:
+        effect_cls: ScrollEffect
+        MDLabel:
+            id: youth
+            size_hint_y: None
+            height: self.texture_size[1]
+    Button:
+        text: 'close'
+        size_hint: (.4, .15)
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release: root.close8()
+
+<newsPopups>:
+    orientation: 'vertical'
+    ScrollView:
+        effect_cls: ScrollEffect
+        MDLabel:
+            id: main_news
+            size_hint_y: None
+            height: self.texture_size[1]
+    Button:
+        text: 'close'
+        size_hint: (.4, .15)
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release: root.close9()
+
+<newsPopups2>:
+    orientation: 'vertical'
+    ScrollView:
+        effect_cls: ScrollEffect
+        MDLabel:
+            id: two_news
+            size_hint_y: None
+            height: self.texture_size[1]
+    Button:
+        text: 'close'
+        size_hint: (.4, .15)
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release: root.close10()
+
+<newsPopups3>:
+    orientation: 'vertical'
+    ScrollView:
+        effect_cls: ScrollEffect
+        MDLabel:
+            id: three_news
+            size_hint_y: None
+            height: self.texture_size[1]
+    Button:
+        text: 'close'
+        size_hint: (.4, .15)
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release: root.close11()
+
+<newsPopups4>:
+    orientation: 'vertical'
+    ScrollView:
+        effect_cls: ScrollEffect
+        MDLabel:
+            id: four_news
+            size_hint_y: None
+            height: self.texture_size[1]
+    Button:
+        text: 'close'
+        size_hint: (.4, .15)
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release: root.close12()
+
+<newsPopups5>:
+    orientation: 'vertical'
+    ScrollView:
+        effect_cls: ScrollEffect
+        MDLabel:
+            id: fifth_news
+            size_hint_y: None
+            height: self.texture_size[1]
+    Button:
+        text: 'close'
+        size_hint: (.4, .15)
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release: root.close13()
+
+<massPopups>:
+    orientation: 'vertical'
+    ScrollView:
+        effect_cls: ScrollEffect
+        MDLabel:
+            id: mass_time
+            size_hint_y: None
+            height: self.texture_size[1]
+            multiline: True
+    Button:
+        text: 'close'
+        size_hint: (.4, .15)
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release: root.close14()
+
+<Administration>
+    name: 'admini'
+    MDScreen:
+        MDTopAppBar:
+            title: f"       Administration"
+            id: dots11
+            pos_hint: {"top": 1}
+            elevation: 10
+            mode: 'center'
+            md_bg_color: '#000000'
+            mode: "free-end"
+        MDIconButton:
+            icon: 'less-than'
+            halign: 'center'
+            valign: 'center'
+            pos_hint: {'top': .985}
+            on_release:
+                app.root.current = 'toolbar_nav'
+                root.manager.transition.direction = "right"
+        MDBoxLayout:
+            orientation: 'vertical'
+            pos_hint: {'top':.98-dots11.height/root.height}
+
+            TabbedPanel:
+                do_default_tab: False
+                tab_width: self.size[0] / 2
+
+                TabbedPanelItem:
+                    text: "Key People"
+                    ScrollView:
+                        effect_cls: 'ScrollEffect'
+                        size_hint_y: 1-dots11.height/root.height
+                        MDLabel:
+                            id: key
+                            height: self.texture_size[1]
+                            pos_hint:{'top':1}
                             adaptive_height: True
+                            size_hint_Y: None
+                            text_size: Window.width, None
 
-                    OneLineListItem:
-                        divider: None
-                        text: "@2022 Carmel Communication"
-                        font_style: "Subtitle2"
-                        secondary_font_style: 'Body2'
-                        theme_text_color: 'Custom'
-                        text_color:1,1,1,1
-                        _txt_left_pad: "1dp"
-                        _txt_bot_pad: "26dp"
-                        disabled: True
+                TabbedPanelItem:
+                    text: "Ward"
+                    ScrollView:
+                        effect_cls: 'ScrollEffect'
+                        size_hint_y: .96-dots11.height/root.height
+                        bar_width: 0
+                        MDLabel:
+                            id: ward
+                            height: self.texture_size[1]
+                            pos_hint:{'top':1}
+                            adaptive_height: True
+                            size_hint_Y: None
+                            text_size: Window.width, None
 
-<Vidi>:
-    name: 'vidi'
+<CarmelVoice>:
+    name: 'carm_vo'
     MDScreen:
+        MDTopAppBar:
+            id: dots4
+            title: f"       Carmel Voice"
+            pos_hint: {"top": 1}
+            elevation: 10
+            mode: 'center'
+            md_bg_color: '#000000'
+            mode: "free-end"
+        MDIconButton:
+            icon: 'less-than'
+            halign: 'center'
+            valign: 'center'
+            pos_hint: {'top': .985}
+            on_release:
+                app.root.current = 'toolbar_nav'
+                root.manager.transition.direction = "right"
+        ScrollView:
+            effect_cls: 'ScrollEffect'
+            pos_hint: {'top':.98-dots4.height/root.height}
+            size_hint_y: 1-dots4.height/root.height
+
+            MDGridLayout:
+                spacing: 10
+                cols: 3
+                size_hint: 1,1.6
+                Grid:
+                    orientation: 'vertical'
+                    on_release:
+                        import webbrowser
+                        webbrowser.open(root.carmel_link1)
+                    AsyncImage:
+                        id: mag_image1
+                        allow_stretch: True
+                        keep_ratio:False
+                Grid:
+                    orientation: 'vertical'
+                    on_release:
+                        import webbrowser
+                        webbrowser.open(root.carmel_link2)
+                    AsyncImage:
+                        id: mag_image2
+                        allow_stretch: True
+                        keep_ratio:False
+                Grid:
+                    orientation: 'vertical'
+                    on_release:
+                        import webbrowser
+                        webbrowser.open(root.carmel_link3)
+                    AsyncImage:
+                        id: mag_image3
+                        allow_stretch: True
+                        keep_ratio:False
+                Grid:
+                    orientation: 'vertical'
+                    on_release:
+                        import webbrowser
+                        webbrowser.open(root.carmel_link4)
+                    AsyncImage:
+                        id: mag_image4
+                        allow_stretch: True
+                        keep_ratio:False
+                Grid:
+                    orientation: 'vertical'
+                    on_release:
+                        import webbrowser
+                        webbrowser.open(root.carmel_link5)
+                    AsyncImage:
+                        id: mag_image5
+                        allow_stretch: True
+                        keep_ratio:False
+                Grid:
+                    orientation: 'vertical'
+                    on_release:
+                        import webbrowser
+                        webbrowser.open(root.carmel_link6)
+                    AsyncImage:
+                        id: mag_image6
+                        allow_stretch: True
+                        keep_ratio:False
+                Grid:
+                    orientation: 'vertical'
+                    on_release:
+                        import webbrowser
+                        webbrowser.open(root.carmel_link7)
+                    AsyncImage:
+                        id: mag_image7
+                        allow_stretch: True
+                        keep_ratio:False
+                Grid:
+                    orientation: 'vertical'
+                    on_release:
+                        import webbrowser
+                        webbrowser.open(root.carmel_link8)
+                    AsyncImage:
+                        id: mag_image8
+                        allow_stretch: True
+                        keep_ratio:False
+                Grid:
+                    orientation: 'vertical'
+                    on_release:
+                        import webbrowser
+                        webbrowser.open(root.carmel_link9)
+                    AsyncImage:
+                        id: mag_image9
+                        allow_stretch: True
+                        keep_ratio:False
+                Grid:
+                    orientation: 'vertical'
+                    on_release:
+                        import webbrowser
+                        webbrowser.open(root.carmel_link10)
+                    AsyncImage:
+                        id: mag_image10
+                        allow_stretch: True
+                        keep_ratio:False
+                Grid:
+                    orientation: 'vertical'
+                    on_release:
+                        import webbrowser
+                        webbrowser.open(root.carmel_link11)
+                    AsyncImage:
+                        id: mag_image11
+                        allow_stretch: True
+                        keep_ratio:False
+                Grid:
+                    orientation: 'vertical'
+                    on_release:
+                        import webbrowser
+                        webbrowser.open(root.carmel_link12)
+                    AsyncImage:
+                        id: mag_image12
+                        allow_stretch: True
+                        keep_ratio:False
+                Grid:
+                    orientation: 'vertical'
+                    on_release:
+                        import webbrowser
+                        webbrowser.open(root.carmel_link13)
+                    AsyncImage:
+                        id: mag_image13
+                        allow_stretch: True
+                        keep_ratio:False
+                Grid:
+                    orientation: 'vertical'
+                    on_release:
+                        import webbrowser
+                        webbrowser.open(root.carmel_link14)
+                    AsyncImage:
+                        id: mag_image14
+                        allow_stretch: True
+                        keep_ratio:False
+
+<History>
+    name: 'history'
+    MDScreen:
+        MDTopAppBar:
+            title: f"       History"
+            id: dots12
+            pos_hint: {"top": 1}
+            elevation: 10
+            mode: 'center'
+            md_bg_color: '#000000'
+            mode: "free-end"
+        MDIconButton:
+            icon: 'less-than'
+            halign: 'center'
+            valign: 'center'
+            pos_hint: {'top': .985}
+            on_release:
+                app.root.current = 'toolbar_nav'
+                root.manager.transition.direction = "right"
+        MDBoxLayout:
+            orientation: 'vertical'
+            pos_hint: {'top':.98-dots12.height/root.height}
+            TabbedPanel:
+                do_default_tab: False
+                tab_width: self.size[0] / 2
+
+                TabbedPanelItem:
+                    text: 'Carmel Parish'
+                    ScrollView:
+                        effect_cls: 'ScrollEffect'
+                        size_hint_y: 1-dots12.height/root.height
+                        MDLabel:
+                            id: hist_carm_text
+                            height: self.texture_size[1]
+                            pos_hint:{'top':1}
+                            adaptive_height: True
+                            size_hint_Y: None
+                            text_size: Window.width, None
+
+                TabbedPanelItem:
+                    text: 'Kalyan Diocese'
+                    ScrollView:
+                        effect_cls: 'ScrollEffect'
+                        size_hint_y: 1-dots12.height/root.height
+                        bar_width: 0
+                        MDLabel:
+                            id: hist_kalyan_text
+                            height: self.texture_size[1]
+                            pos_hint:{'top':1}
+                            adaptive_height: True
+                            size_hint_Y: None
+                            text_size: Window.width, None
+
+<About>:
+    name: 'about'
+    MDScreen:
+        MDTopAppBar:
+            title: f"       About"
+            id: dots8
+            pos_hint: {"top": 1}
+            elevation: 0
+            mode: 'center'
+            md_bg_color: '#000000'
+            mode: "free-end"
+
         MDIconButton:
             icon: 'less-than'
             halign: 'center'
@@ -366,14 +1290,72 @@ MDScreen:
                 app.root.current = 'toolbar_nav'
                 root.manager.transition.direction = "right"
 
-<Vidii>:
-    name: 'vidii'
+        ScrollIcon:
+            effect_cls: 'ScrollEffect'
+            pos_hint: {'top':.98-dots8.height/root.height}
+            size_hint_y: .98-dots8.height/root.height
+            Grid:
+                size_hint_y: None
+                adaptive_height: True
+                orientation: 'vertical'
+                pos_hint: {'top':.98-dots8.height/root.height}
+                MapView:
+                    lat:18.555553551814075
+                    lon:73.91503230966833
+                    zoom:12
+                    size_hint_y: None
+                    adaptive_height: True
+                    size: 500,500
+                    MapMarkerPopup:
+                        lat:18.555553551814075
+                        lon:73.91503230966833
+                        Grid:
+                            on_release:
+                                import webbrowser
+                                webbrowser.open(root.map_link)
+                            AsyncImage:
+                                source: 'logo.png'
+                MDLabel:
+                    id: about_text
+                    height: self.texture_size[1]
+                    adaptive_height: True
+                    size_hint_Y: None
+
+<No_Wifi_Page>:
+    name: 'no_wifi'
     MDScreen:
-        MDIconButton:
-            icon: 'less-than'
-            halign: 'center'
-            valign: 'center'
-            pos_hint: {'top': .985}
-            on_release:
-                app.root.current = 'toolbar_nav'
-                root.manager.transition.direction = "right"
+        MDFloatLayout:
+            orientation: 'vertical'
+            Image:
+                source: 'no wifi.png'
+                pos_hint: {'center_x':.5, 'center_y':.65}
+                size_hint_y: None
+                width: 50
+            MDLabel:
+                markup: True
+                text: "[b]You're offline[b]"
+                bold: True
+                font_size: 28
+                halign:'center'
+                pos_hint: {'center_y':.5}
+            MDLabel:
+                text: "Check your internet connection and try again"
+                halign:'center'
+                pos_hint: {'center_y':.4}
+            MDRaisedButton:
+                markup: True
+                text:'[b]CLOSE[b]'
+                bold: True
+                pos_hint: {'center_x':.5, 'center_y':.3}
+                md_bg_color: '#FFC300'
+                size_hint: 0.7,0.07
+                on_release: app.stop()
+
+<Splash_screen>:
+    name: 'splash'
+    MDBoxLayout:
+        orientation: 'vertical'
+        Image:
+            source: 'logo.png'
+            pos_hint: {'center_x':.5, 'center_y':.5}
+            width: 50
